@@ -14,7 +14,10 @@ def draw_bounding_boxes(image_path, annotation_path, output_path, classes):
 
     # 读取图像
     image = cv2.imread(image_path)
-    height, width, _ = image.shape
+    try: 
+        height, width, _ = image.shape
+    except:
+        return
 
     # 读取标注
     with open(annotation_path, 'r') as file:
@@ -42,6 +45,40 @@ def draw_bounding_boxes(image_path, annotation_path, output_path, classes):
     # 保存带标注的图像
     jpg_name = os.path.split(image_path)[1]
     cv2.imwrite(os.path.join(output_path, jpg_name), image)
+
+def crop_bounding_boxes(image_path, annotation_path, output_path, classes):
+    # 随机颜色生成器
+    def get_random_color():
+        return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+
+    # 读取图像
+    image = cv2.imread(image_path)
+    try: 
+        height, width, _ = image.shape
+    except:
+        return
+
+    # 读取标注
+    with open(annotation_path, 'r') as file:
+        annotations = file.readlines()
+
+    # 绘制每个边界框
+    for i,annotation in enumerate(annotations):
+        class_id, x_center, y_center, box_width, box_height = map(float, annotation.split())
+        x_center, y_center, box_width, box_height = x_center * width, y_center * height, box_width * width, box_height * height
+
+        top_left_x = int(x_center - box_width / 2)
+        top_left_y = int(y_center - box_height / 2)
+
+        bottom_right_x = int(x_center + box_width / 2)
+        bottom_right_y = int(y_center + box_height / 2)
+        cropped_image = image[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
+    # 保存带标注的图像
+        jpg_name = os.path.split(image_path)[1]
+        jpg_name = jpg_name[:-3]+"label_"+str(class_id)+"_"+str(i)+".jpg"
+        cv2.imwrite(os.path.join(output_path, jpg_name), cropped_image)
+
 
 def clear_images_in_folder(folder_path):
     # 检查文件夹中的图像文件（假设图像格式为jpg, png, jpeg）
@@ -177,12 +214,15 @@ if __name__ == "__main__":
                     1:"nake",
                     2:"rat",
                     3:"cat",
-                    4:"dog"}
+                    4:"dog",
+                    5:"no_mask"}
     # 使用示例
     nake_class = {0:"nake",
                   1:"no_maks"}
-    images_path = "/home/dancer/data/cook_match/offical_train_data/v4/images"
-    txt_path = "/home/dancer/data/cook_match/offical_train_data/v4/labels"
+    cat_dog_class = {0:"cat",
+                     1:"dog"}
+    images_path = "/home/dancer/data/cook_match/offical_train_data/v2/images"
+    txt_path = "/home/dancer/data/cook_match/offical_train_data/v2/labels"
     save_path = "see_box"
     clear_images_in_folder(save_path)
     according_txt_find_img(images_path, txt_path, save_path, stage1_class)

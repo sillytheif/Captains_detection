@@ -3,11 +3,11 @@ import os
 import csv
 images_path = "/home/dancer/data/cook_match/picture"
 video_path = "/home/dancer/data/cook_match/video"
-save_name = "answer_1122_m1.csv"
+save_name = "answer_1205_m1.csv"
 
 
 # Load a model
-model = YOLO('/home/dancer/code/my_yolo_v8/runs/detect/train9/weights/best.pt')  # pretrained YOLOv8n model
+model = YOLO('/home/dancer/code/my_yolo_v8/runs/detect/train20/weights/best.pt')  # pretrained YOLOv8n model
 
 # Run batched inference on a list of images
 
@@ -33,7 +33,7 @@ with open(save_name, 'w', newline='', encoding='utf-8') as csvfile:
         first_words_set = result.boxes.cls.tolist()
         # 将首个单词集合转换为十进制数
         file_name = os.path.split(result.path)[1]
-        decimal_number = set_to_decimal(first_words_set)
+        decimal_number = set_to_decimal(set(first_words_set))
         # 将十进制数写入 CSV
         #os.path.split()
         csv_writer.writerow([file_name, decimal_number])
@@ -56,9 +56,9 @@ with open(save_name, 'a+', newline='', encoding='utf-8') as csvfile:
         else:
             if last_name is not None:
                 # 结算
-                first_words_set = [i for i,x in enumerate(count_list) if x >=3]
+                first_words_set = [i for i,x in enumerate(count_list) if x >=4]
                 file_name = os.path.split(last_name)[1]
-                decimal_number = set_to_decimal(first_words_set)
+                decimal_number = set_to_decimal(set(first_words_set))
                 csv_writer.writerow([file_name, decimal_number])
             count_list = [0 for i in range(5)]
             last_name = current_name

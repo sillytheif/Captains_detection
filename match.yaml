@@ -8,9 +8,9 @@
 
 
 # Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
-path: /home/dancer/data/cook_match/offical_train_data    # dataset root dir
-train: [v4/images, stage1_val/images]  # train images (relative to 'path') 128 images
-val: stage1_val/images  # val images (relative to 'path') 128 images
+path: /home/dancer/data    # dataset root dir
+train: [/home/dancer/data/cook_match/offical_train_data/v4/images, prepare_for_match/train_1124/to_cop/images, prepare_for_match/train_1127/smoking/train/images, prepare_for_match/train_1127/smoking/test/images, prepare_for_match/train_1127/mouse/images, prepare_for_match/train_1127/cat_dog/images]  # train images (relative to 'path') 128 images
+val: [/home/dancer/data/cook_match/offical_train_data/stage1_val/images, prepare_for_match/train_1127/smoking/val/images]  # val images (relative to 'path') 128 images
 test:  # test images (optional)
 
 # Classes
